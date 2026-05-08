@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file_path=$(jq -r '.tool_input.file_path // empty'); case \"$file_path\" in *.py|*.pyi) ruff format \"$file_path\" ;; esac"
+          }
+        ]
+      }
+    ]
+  }
+}

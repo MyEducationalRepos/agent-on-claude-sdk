@@ -1,0 +1,8 @@
+.DS_Store
+**/.DS_Store
+.ruff_cache/
+**/.ruff_cache/
+
+!.claude/
+!.claude/**
+.claude/**/.DS_Store

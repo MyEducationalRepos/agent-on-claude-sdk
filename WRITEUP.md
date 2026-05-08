@@ -1,0 +1,7 @@
+# Harness Reflection
+
+The harness gave me structure before I wrote a line of project logic. In `agent-from-scratch`, I had to invent the execution loop, decide when a task was done, track state, preserve context, validate outputs, and remember which files were allowed to change. Here, much of that came pre-wired: OpenSpec turned a vague request into proposal, design, specs, and tasks; the prompt contract told the agent how to select a change, read context, advance checkboxes, and stop only on real blockers.
+
+The harness also gave me conventions that reduce accidental creativity. Skills provide a known folder shape and invocation rule. Hooks attach behavior to tool use, so formatting becomes ambient instead of a manual cleanup step. Sub-agents give delegation a name and boundary, rather than another improvised recursive call. Even the progress reporting, context files, and archive path were already part of the workflow.
+
+What I still wrote myself was the project-specific judgment: the actual convention text, the `research-summary` format, the hook command, the related-links record, and this comparison. The harness supplied rails; I supplied the cargo, tests, and taste. That difference made the work feel less like bootstrapping infrastructure and more like filling a prepared, inspectable system.
