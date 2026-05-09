@@ -1,41 +1,41 @@
 # agent-on-claude-sdk
 
-This repository is a compact learning project for rebuilding the behavior of `agent-from-scratch` on top of the Claude Agent SDK harness. The current focus is the MVP scaffold: package layout, project conventions, validation rules, and the documentation that explains how the repo is meant to grow.
-
-## Project Map
-
-- `CLAUDE.md`: active state hub, task index, validators, and commit targets.
-- `user-stories.md`: source of truth for scope and acceptance criteria.
-- `architecture.md`: the implementation plan and runtime shape.
-- `WRITEUP.md`: the 200-word comparison with `agent-from-scratch`.
-- `skills/research-summary/SKILL.md`: the reusable research-summary contract.
+A compact learning project that rebuilds the behavior of `agent-from-scratch` on
+top of the Claude Agent SDK harness — demonstrating what the SDK removes versus
+what you control when you wire the loop yourself.
 
 ## Quickstart
 
-1. Create or refresh the local environment:
+```sh
+# 1. Install dependencies
+uv sync --dev
 
-   ```sh
-   uv sync
-   ```
+# 2. Copy env template and add your keys
+cp .env.example .env && $EDITOR .env
 
-2. Run the current focused test slice:
+# 3. Run the agent
+bash scripts/run.sh "Summarise the README"
+```
 
-   ```sh
-   uv run pytest tests/unit/test_project_metadata.py -q
-   ```
+See [RUNBOOK.md](RUNBOOK.md) for full setup, Docker, testing, and troubleshooting
+instructions.
 
-3. Use the planned application entrypoint once it lands in the later tasks:
+## Project Map
 
-   ```sh
-   python -m agent_on_claude_sdk.main
-   ```
-
-## Current Status
-
-- The package manifest, lockfile, and source skeleton are in place.
-- The CLI entrypoint is planned but not implemented yet, so the command above is the target run path rather than a completed feature.
-- Docker support is part of the roadmap and will arrive through the later Dockerfile and compose tasks.
+| File / Directory | Purpose |
+|---|---|
+| `RUNBOOK.md` | Operational reference — setup, run, test, Docker, CI |
+| `CLAUDE.md` | Active state hub — task index, validators, commit log |
+| `user-stories.md` | Scope and acceptance criteria |
+| `architecture.md` | Implementation plan and runtime shape |
+| `WRITEUP.md` | 200-word harness comparison |
+| `WHAT_IS_A_HARNESS.md` | Plain-language explainer for learners |
+| `src/agent_on_claude_sdk/` | Package source |
+| `tests/` | Unit, integration, and e2e test suites |
+| `scripts/` | `run.sh`, `verify_behavior.sh`, `check_secrets.sh` |
+| `skills/research-summary/` | Reusable research-summary Skill contract |
 
 ## Reading Order
 
-If you are new to the repo, read `user-stories.md` first, then `architecture.md`, then `CLAUDE.md`. After that, use `WRITEUP.md` for the harness comparison and `skills/research-summary/SKILL.md` for the standard summary output shape.
+New to the repo → `user-stories.md` → `architecture.md` → `CLAUDE.md` →
+`WRITEUP.md` → `RUNBOOK.md`.
