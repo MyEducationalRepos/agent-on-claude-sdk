@@ -64,3 +64,4 @@ T-023 feat(harness): persist run state — 5 passed
 T-024 feat(cli): add main entrypoint — 7 passed
 T-025 feat(console): add visible progress output — 6 passed
 T-026 feat(helpers): add research summary formatter — 12 passed
+T-027 feat(helpers): add related-links helper — 12 passed
