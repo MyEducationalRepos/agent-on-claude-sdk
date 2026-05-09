@@ -1,0 +1,26 @@
+[project]
+name = "agent-on-claude-sdk"
+version = "0.1.0"
+description = "Learning harness rebuilt on the Claude Agent SDK"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.25",
+    "python-dotenv>=1.0",
+    "tavily-python>=0.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8",
+    "ruff>=0.6",
+]

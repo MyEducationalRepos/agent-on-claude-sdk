@@ -38,3 +38,4 @@
 2026-05-09 task=T-037 title="Add the end-to-end real-run test" status=Pending commit="test(e2e): add real run test"
 2026-05-09 task=T-038 title="Execute behavior validation and record evidence" status=Pending commit="docs(status): record behavior evidence"
 2026-05-09 task=T-039 title="Execute final repo hygiene validation and close MVP status" status=Pending commit="chore(release): close MVP verification"
+2026-05-09 task=T-001 status=Success validator="uv run pytest tests/unit/test_project_metadata.py -q && uv sync" note="manifest and lockfile validated"
