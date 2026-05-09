@@ -33,10 +33,13 @@ class TestTerminalStopReasons:
 class TestStopReasonBranchingContract:
     """Verify the branching logic the harness loop must implement."""
 
-    @pytest.mark.parametrize("stop_reason,expected_continue", [
-        ("tool_use", True),   # model wants tool — loop continues
-        ("end_turn", False),  # model is done — loop exits
-    ])
+    @pytest.mark.parametrize(
+        "stop_reason,expected_continue",
+        [
+            ("tool_use", True),  # model wants tool — loop continues
+            ("end_turn", False),  # model is done — loop exits
+        ],
+    )
     def test_should_continue(self, stop_reason, expected_continue):
         should_continue = stop_reason not in TERMINAL_STOP_REASONS
         assert should_continue == expected_continue

@@ -47,7 +47,14 @@ class TestPersistence:
         client = MagicMock()
         client.messages.create.return_value = _end_turn_response()
 
-        run("hello", settings=_settings(), tracer=tracer, record=record, store=store, client=client)
+        run(
+            "hello",
+            settings=_settings(),
+            tracer=tracer,
+            record=record,
+            store=store,
+            client=client,
+        )
 
         loaded = store.load(record.run_id)
         assert loaded.status == RunStatus.complete
@@ -61,7 +68,14 @@ class TestPersistence:
         client = MagicMock()
         client.messages.create.return_value = _end_turn_response()
 
-        run("list-me", settings=_settings(), tracer=tracer, record=record, store=store, client=client)
+        run(
+            "list-me",
+            settings=_settings(),
+            tracer=tracer,
+            record=record,
+            store=store,
+            client=client,
+        )
 
         assert record.run_id in store.list_runs()
 
@@ -73,7 +87,14 @@ class TestPersistence:
         client = MagicMock()
         client.messages.create.return_value = _end_turn_response()
 
-        run("trace-me", settings=_settings(), tracer=tracer, record=record, store=store, client=client)
+        run(
+            "trace-me",
+            settings=_settings(),
+            tracer=tracer,
+            record=record,
+            store=store,
+            client=client,
+        )
 
         trace_path = store.run_dir(record.run_id) / "trace.jsonl"
         assert trace_path.exists()
@@ -98,7 +119,14 @@ class TestPersistence:
         client = MagicMock()
         client.messages.create.return_value = _end_turn_response()
 
-        run("init-save", settings=_settings(), tracer=tracer, record=record, store=store, client=client)
+        run(
+            "init-save",
+            settings=_settings(),
+            tracer=tracer,
+            record=record,
+            store=store,
+            client=client,
+        )
 
         assert len(save_calls) >= 2
         assert save_calls[0] == "running"
@@ -115,7 +143,14 @@ class TestPersistence:
         client = MagicMock()
         client.messages.create.return_value = resp
 
-        run("bad", settings=_settings(), tracer=tracer, record=record, store=store, client=client)
+        run(
+            "bad",
+            settings=_settings(),
+            tracer=tracer,
+            record=record,
+            store=store,
+            client=client,
+        )
 
         loaded = store.load(record.run_id)
         assert loaded.status == RunStatus.error

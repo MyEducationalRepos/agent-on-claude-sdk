@@ -39,6 +39,7 @@ def _end_turn():
 
 def _tool_use(name: str, tool_id: str = "tu_1"):
     from types import SimpleNamespace as SN
+
     block = SN(type="tool_use", name=name, input={}, id=tool_id)
     r = MagicMock()
     r.stop_reason = "tool_use"
@@ -54,7 +55,13 @@ class TestProgressOutput:
     def test_run_header_printed(self, tmp_path, capsys):
         client = MagicMock()
         client.messages.create.return_value = _end_turn()
-        run("task", settings=_settings(), tracer=_tracer(tmp_path), record=RunRecord(task="task", model="m"), client=client)
+        run(
+            "task",
+            settings=_settings(),
+            tracer=_tracer(tmp_path),
+            record=RunRecord(task="task", model="m"),
+            client=client,
+        )
         out = capsys.readouterr().out
         assert "[run]" in out
         assert "claude-test" in out
@@ -62,7 +69,13 @@ class TestProgressOutput:
     def test_turn_progress_printed(self, tmp_path, capsys):
         client = MagicMock()
         client.messages.create.return_value = _end_turn()
-        run("task", settings=_settings(), tracer=_tracer(tmp_path), record=RunRecord(task="task", model="m"), client=client)
+        run(
+            "task",
+            settings=_settings(),
+            tracer=_tracer(tmp_path),
+            record=RunRecord(task="task", model="m"),
+            client=client,
+        )
         out = capsys.readouterr().out
         assert "[turn 1/" in out
         assert "thinking" in out
@@ -70,30 +83,56 @@ class TestProgressOutput:
     def test_done_complete_printed(self, tmp_path, capsys):
         client = MagicMock()
         client.messages.create.return_value = _end_turn()
-        run("task", settings=_settings(), tracer=_tracer(tmp_path), record=RunRecord(task="task", model="m"), client=client)
+        run(
+            "task",
+            settings=_settings(),
+            tracer=_tracer(tmp_path),
+            record=RunRecord(task="task", model="m"),
+            client=client,
+        )
         out = capsys.readouterr().out
         assert "[done]" in out
         assert "complete" in out
 
     def test_tool_name_printed(self, tmp_path, capsys):
         tool_registry.register(
-            {"name": "ping", "description": "", "input_schema": {"type": "object", "properties": {}, "required": []}},
+            {
+                "name": "ping",
+                "description": "",
+                "input_schema": {"type": "object", "properties": {}, "required": []},
+            },
             lambda _: "pong",
         )
         client = MagicMock()
         client.messages.create.side_effect = [_tool_use("ping"), _end_turn()]
-        run("task", settings=_settings(), tracer=_tracer(tmp_path), record=RunRecord(task="task", model="m"), client=client)
+        run(
+            "task",
+            settings=_settings(),
+            tracer=_tracer(tmp_path),
+            record=RunRecord(task="task", model="m"),
+            client=client,
+        )
         out = capsys.readouterr().out
         assert "[tool] ping" in out
 
     def test_done_max_turns_printed(self, tmp_path, capsys):
         tool_registry.register(
-            {"name": "loop", "description": "", "input_schema": {"type": "object", "properties": {}, "required": []}},
+            {
+                "name": "loop",
+                "description": "",
+                "input_schema": {"type": "object", "properties": {}, "required": []},
+            },
             lambda _: "ok",
         )
         client = MagicMock()
         client.messages.create.return_value = _tool_use("loop")
-        run("task", settings=_settings(), tracer=_tracer(tmp_path), record=RunRecord(task="task", model="m"), client=client)
+        run(
+            "task",
+            settings=_settings(),
+            tracer=_tracer(tmp_path),
+            record=RunRecord(task="task", model="m"),
+            client=client,
+        )
         out = capsys.readouterr().out
         assert "max_turns" in out
 
@@ -103,6 +142,12 @@ class TestProgressOutput:
         r.content = []
         client = MagicMock()
         client.messages.create.return_value = r
-        run("task", settings=_settings(), tracer=_tracer(tmp_path), record=RunRecord(task="task", model="m"), client=client)
+        run(
+            "task",
+            settings=_settings(),
+            tracer=_tracer(tmp_path),
+            record=RunRecord(task="task", model="m"),
+            client=client,
+        )
         out = capsys.readouterr().out
         assert "error" in out

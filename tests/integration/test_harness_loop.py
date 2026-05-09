@@ -15,6 +15,7 @@ from agent_on_claude_sdk.tracing import Tracer
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
+
 def _settings(max_turns: int = 3):
     return SimpleNamespace(
         anthropic_api_key="sk-ant-test",
@@ -48,6 +49,7 @@ def _tool_use_then_end_turn(tool_name: str, tool_id: str, tool_input: dict):
 
 
 # ── tests ─────────────────────────────────────────────────────────────────────
+
 
 class TestHarnessLoop:
     def setup_method(self):
@@ -108,9 +110,7 @@ class TestHarnessLoop:
             echo_handler,
         )
 
-        responses = iter(
-            _tool_use_then_end_turn("echo", "tu-echo-1", {"msg": "ping"})
-        )
+        responses = iter(_tool_use_then_end_turn("echo", "tu-echo-1", {"msg": "ping"}))
         client = MagicMock()
         client.messages.create.side_effect = lambda **_: next(responses)
 

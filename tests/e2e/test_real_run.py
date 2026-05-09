@@ -55,4 +55,6 @@ def test_real_run_completes(tmp_path: Path):
     events = trace.read_text().strip().splitlines()
     assert len(events) >= 1, "trace.jsonl is empty"
 
-    print(f"\n[e2e] run_id={latest.name}  events={len(events)}  exit={result.returncode}")
+    print(
+        f"\n[e2e] run_id={latest.name}  events={len(events)}  exit={result.returncode}"
+    )

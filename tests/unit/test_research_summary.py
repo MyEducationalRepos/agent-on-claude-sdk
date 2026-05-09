@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
 
 from agent_on_claude_sdk.helpers.research_summary import ResearchSummary
 
@@ -61,7 +60,8 @@ class TestEmptyOptionals:
 class TestPopulatedOptionals:
     def test_local_paths_rendered(self):
         s = ResearchSummary(
-            question="Q", key_findings=["f"],
+            question="Q",
+            key_findings=["f"],
             local_paths=["src/agent_on_claude_sdk/harness.py"],
         )
         md = s.to_markdown()
@@ -69,7 +69,8 @@ class TestPopulatedOptionals:
 
     def test_external_links_rendered(self):
         s = ResearchSummary(
-            question="Q", key_findings=["f"],
+            question="Q",
+            key_findings=["f"],
             external_links=["https://docs.anthropic.com"],
         )
         md = s.to_markdown()
@@ -77,7 +78,8 @@ class TestPopulatedOptionals:
 
     def test_evidence_gaps_rendered(self):
         s = ResearchSummary(
-            question="Q", key_findings=["f"],
+            question="Q",
+            key_findings=["f"],
             evidence_gaps=["No benchmark data available."],
         )
         md = s.to_markdown()

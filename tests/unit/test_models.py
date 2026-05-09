@@ -62,8 +62,14 @@ class TestRunRecord:
         r = RunRecord(task="t", model="m")
         d = r.as_dict()
         expected = {
-            "run_id", "task", "model", "status",
-            "started_at", "ended_at", "turns_count", "error_summary",
+            "run_id",
+            "task",
+            "model",
+            "status",
+            "started_at",
+            "ended_at",
+            "turns_count",
+            "error_summary",
         }
         assert set(d) == expected
 

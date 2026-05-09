@@ -38,11 +38,15 @@ class TestHandlerWithResults:
 
     def test_formats_results(self, monkeypatch):
         monkeypatch.setenv("TAVILY_API_KEY", "tvly-test")
-        fake = self._make_client([
-            {"title": "T1", "url": "https://a.com", "content": "body1"},
-            {"title": "T2", "url": "https://b.com", "content": "body2"},
-        ])
-        with patch("agent_on_claude_sdk.tools.web_search._get_client", return_value=fake):
+        fake = self._make_client(
+            [
+                {"title": "T1", "url": "https://a.com", "content": "body1"},
+                {"title": "T2", "url": "https://b.com", "content": "body2"},
+            ]
+        )
+        with patch(
+            "agent_on_claude_sdk.tools.web_search._get_client", return_value=fake
+        ):
             result = ws.handler({"query": "python"})
         assert "T1" in result
         assert "https://a.com" in result
@@ -51,7 +55,9 @@ class TestHandlerWithResults:
     def test_empty_results_returns_no_results(self, monkeypatch):
         monkeypatch.setenv("TAVILY_API_KEY", "tvly-test")
         fake = self._make_client([])
-        with patch("agent_on_claude_sdk.tools.web_search._get_client", return_value=fake):
+        with patch(
+            "agent_on_claude_sdk.tools.web_search._get_client", return_value=fake
+        ):
             result = ws.handler({"query": "nothing"})
         assert "No results" in result
 
@@ -59,7 +65,9 @@ class TestHandlerWithResults:
         monkeypatch.setenv("TAVILY_API_KEY", "tvly-test")
         mock = MagicMock()
         mock.search.side_effect = RuntimeError("timeout")
-        with patch("agent_on_claude_sdk.tools.web_search._get_client", return_value=mock):
+        with patch(
+            "agent_on_claude_sdk.tools.web_search._get_client", return_value=mock
+        ):
             result = ws.handler({"query": "fail"})
         assert result.startswith("[error]")
         assert "timeout" in result
@@ -67,5 +75,7 @@ class TestHandlerWithResults:
     def test_returns_string(self, monkeypatch):
         monkeypatch.setenv("TAVILY_API_KEY", "tvly-test")
         fake = self._make_client([{"title": "x", "url": "u", "content": "c"}])
-        with patch("agent_on_claude_sdk.tools.web_search._get_client", return_value=fake):
+        with patch(
+            "agent_on_claude_sdk.tools.web_search._get_client", return_value=fake
+        ):
             assert isinstance(ws.handler({"query": "q"}), str)

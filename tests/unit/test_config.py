@@ -1,6 +1,5 @@
 """Unit tests for config loading and fail-fast validation."""
 
-import os
 import pytest
 
 from agent_on_claude_sdk.config import Settings, load_settings

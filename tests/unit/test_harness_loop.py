@@ -4,20 +4,20 @@ from __future__ import annotations
 
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
 import agent_on_claude_sdk.tools as tool_registry
 from agent_on_claude_sdk.harness import run
 from agent_on_claude_sdk.models import RunRecord, RunStatus
-from agent_on_claude_sdk.persistence.fs_store import FsStore
 from agent_on_claude_sdk.tracing import Tracer
 
 
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
+
 
 @pytest.fixture(autouse=True)
 def clean_registry():
@@ -53,7 +53,9 @@ def _end_turn_response():
 
 def _tool_use_response(tool_name: str, tool_input: dict, tool_id: str = "tu_1"):
     """Fake response with one tool_use block."""
-    block = SimpleNamespace(type="tool_use", name=tool_name, input=tool_input, id=tool_id)
+    block = SimpleNamespace(
+        type="tool_use", name=tool_name, input=tool_input, id=tool_id
+    )
     resp = MagicMock()
     resp.stop_reason = "tool_use"
     resp.content = [block]
@@ -64,25 +66,40 @@ def _tool_use_response(tool_name: str, tool_input: dict, tool_id: str = "tu_1"):
 # Tests
 # ---------------------------------------------------------------------------
 
+
 class TestEndTurnImmediately:
     def test_status_complete(self, tmp_path):
         client = MagicMock()
         client.messages.create.return_value = _end_turn_response()
         record = _record()
-        run("task", settings=_settings(), tracer=_tracer(tmp_path), record=record, client=client)
+        run(
+            "task",
+            settings=_settings(),
+            tracer=_tracer(tmp_path),
+            record=record,
+            client=client,
+        )
         assert record.status == RunStatus.complete
 
     def test_one_api_call(self, tmp_path):
         client = MagicMock()
         client.messages.create.return_value = _end_turn_response()
-        run("task", settings=_settings(), tracer=_tracer(tmp_path), record=_record(), client=client)
+        run(
+            "task",
+            settings=_settings(),
+            tracer=_tracer(tmp_path),
+            record=_record(),
+            client=client,
+        )
         assert client.messages.create.call_count == 1
 
     def test_trace_has_done_event(self, tmp_path):
         client = MagicMock()
         client.messages.create.return_value = _end_turn_response()
         tracer = _tracer(tmp_path)
-        run("task", settings=_settings(), tracer=tracer, record=_record(), client=client)
+        run(
+            "task", settings=_settings(), tracer=tracer, record=_record(), client=client
+        )
         types = [e["event_type"] for e in tracer.events()]
         assert "done" in types
 
@@ -92,14 +109,24 @@ class TestMaxTurns:
         client = MagicMock()
         # Always returns tool_use but no tool registered → dispatches to error
         tool_registry.register(
-            {"name": "noop", "description": "", "input_schema": {"type": "object", "properties": {}, "required": []}},
+            {
+                "name": "noop",
+                "description": "",
+                "input_schema": {"type": "object", "properties": {}, "required": []},
+            },
             lambda _: "ok",
         )
         client.messages.create.side_effect = [
             _tool_use_response("noop", {}, f"tu_{i}") for i in range(3)
         ] + [_end_turn_response()]
         record = _record()
-        result = run("task", settings=_settings(max_turns=3), tracer=_tracer(tmp_path), record=record, client=client)
+        result = run(
+            "task",
+            settings=_settings(max_turns=3),
+            tracer=_tracer(tmp_path),
+            record=record,
+            client=client,
+        )
         # 3 tool_use turns then end_turn on 4th — but max_turns=3 so it depends on iteration
         assert result.status in {RunStatus.complete, RunStatus.max_turns}
 
@@ -107,14 +134,28 @@ class TestMaxTurns:
         client = MagicMock()
         client.messages.create.return_value = _end_turn_response()
         record = _record()
-        run("task", settings=_settings(), tracer=_tracer(tmp_path), record=record, client=client)
+        run(
+            "task",
+            settings=_settings(),
+            tracer=_tracer(tmp_path),
+            record=record,
+            client=client,
+        )
         assert record.turns_count >= 1
 
 
 class TestToolUseDispatch:
     def test_tool_result_sent_back(self, tmp_path):
         tool_registry.register(
-            {"name": "echo", "description": "", "input_schema": {"type": "object", "properties": {"t": {"type": "string"}}, "required": ["t"]}},
+            {
+                "name": "echo",
+                "description": "",
+                "input_schema": {
+                    "type": "object",
+                    "properties": {"t": {"type": "string"}},
+                    "required": ["t"],
+                },
+            },
             lambda inp: inp["t"],
         )
         responses = [
@@ -123,7 +164,13 @@ class TestToolUseDispatch:
         ]
         client = MagicMock()
         client.messages.create.side_effect = responses
-        record = run("task", settings=_settings(), tracer=_tracer(tmp_path), record=_record(), client=client)
+        record = run(
+            "task",
+            settings=_settings(),
+            tracer=_tracer(tmp_path),
+            record=_record(),
+            client=client,
+        )
         assert record.status == RunStatus.complete
         # Second call should include tool results
         second_call_messages = client.messages.create.call_args_list[1][1]["messages"]
@@ -138,7 +185,13 @@ class TestToolUseDispatch:
         ]
         client = MagicMock()
         client.messages.create.side_effect = responses
-        record = run("task", settings=_settings(), tracer=_tracer(tmp_path), record=_record(), client=client)
+        record = run(
+            "task",
+            settings=_settings(),
+            tracer=_tracer(tmp_path),
+            record=_record(),
+            client=client,
+        )
         assert record.status == RunStatus.complete
         second_messages = client.messages.create.call_args_list[1][1]["messages"]
         content = second_messages[-1]["content"][0]["content"]
@@ -146,13 +199,23 @@ class TestToolUseDispatch:
 
     def test_result_truncated_to_max_result_chars(self, tmp_path):
         tool_registry.register(
-            {"name": "big", "description": "", "input_schema": {"type": "object", "properties": {}, "required": []}},
+            {
+                "name": "big",
+                "description": "",
+                "input_schema": {"type": "object", "properties": {}, "required": []},
+            },
             lambda _: "x" * 1000,
         )
         responses = [_tool_use_response("big", {}, "tu_b"), _end_turn_response()]
         client = MagicMock()
         client.messages.create.side_effect = responses
-        run("task", settings=_settings(max_result_chars=10), tracer=_tracer(tmp_path), record=_record(), client=client)
+        run(
+            "task",
+            settings=_settings(max_result_chars=10),
+            tracer=_tracer(tmp_path),
+            record=_record(),
+            client=client,
+        )
         second_messages = client.messages.create.call_args_list[1][1]["messages"]
         content = second_messages[-1]["content"][0]["content"]
         assert len(content) == 10
@@ -165,6 +228,12 @@ class TestUnhandledStopReason:
         resp.content = []
         client = MagicMock()
         client.messages.create.return_value = resp
-        record = run("task", settings=_settings(), tracer=_tracer(tmp_path), record=_record(), client=client)
+        record = run(
+            "task",
+            settings=_settings(),
+            tracer=_tracer(tmp_path),
+            record=_record(),
+            client=client,
+        )
         assert record.status == RunStatus.error
         assert "pause_turn" in (record.error_summary or "")

@@ -3,7 +3,6 @@
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import pytest
 
 from agent_on_claude_sdk.validation import format_if_python
 

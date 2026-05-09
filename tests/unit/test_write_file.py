@@ -40,20 +40,26 @@ class TestHandler:
         result = handler({"path": "r.txt", "content": "x"})
         assert isinstance(result, str)
 
-    def test_path_traversal_rejected(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    def test_path_traversal_rejected(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
         monkeypatch.chdir(tmp_path)
         result = handler({"path": "../../etc/passwd", "content": "bad"})
         assert result.startswith("[error]")
         assert "outside" in result.lower()
 
-    def test_absolute_path_inside_cwd_allowed(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    def test_absolute_path_inside_cwd_allowed(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
         monkeypatch.chdir(tmp_path)
         abs_path = str(tmp_path / "ok.txt")
         result = handler({"path": abs_path, "content": "safe"})
         assert not result.startswith("[error]")
         assert (tmp_path / "ok.txt").read_text() == "safe"
 
-    def test_absolute_path_outside_cwd_rejected(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    def test_absolute_path_outside_cwd_rejected(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
         monkeypatch.chdir(tmp_path)
         result = handler({"path": "/tmp/injected.txt", "content": "bad"})
         assert result.startswith("[error]")

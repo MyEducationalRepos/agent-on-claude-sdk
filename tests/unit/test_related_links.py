@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
 
 from agent_on_claude_sdk.helpers.related_links import RelatedLinks, collect_local_paths
 
@@ -27,7 +26,9 @@ class TestRelatedLinksMarkdown:
         assert "No external link available yet" in md
 
     def test_local_paths_rendered(self):
-        rl = RelatedLinks(local_paths=["CLAUDE.md", "src/agent_on_claude_sdk/harness.py"])
+        rl = RelatedLinks(
+            local_paths=["CLAUDE.md", "src/agent_on_claude_sdk/harness.py"]
+        )
         md = rl.to_markdown()
         assert "- CLAUDE.md" in md
         assert "- src/agent_on_claude_sdk/harness.py" in md
