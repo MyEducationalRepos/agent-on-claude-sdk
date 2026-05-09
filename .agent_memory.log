@@ -44,3 +44,4 @@
 2026-05-09 task=T-004 status=Success validator="rg README navigation && rg README quickstart" note="root entry point and run instructions validated"
 2026-05-09 task=T-005 status=Success validator="rg CLAUDE conventions headings && rg CLAUDE safety rules" note="root conventions confirmed at file top"
 2026-05-09 task=T-006 status=Success validator="rg research-summary numbered sections && rg research-summary uncertainty rules" note="skill contract validated and ready for reuse"
+2026-05-09 task=T-007 status=Success validator="wc -w WRITEUP.md == 200 && rg writeup topic anchors" note="writeup length and comparison topic validated"
