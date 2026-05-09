@@ -60,3 +60,4 @@
 2026-05-09T15:45:17Z task=T-020 status=success validator='9 passed'
 T-021 feat(harness): implement base loop — 18 passed
 T-022 feat(harness): aggregate tool results — 18 passed
+T-023 feat(harness): persist run state — 5 passed

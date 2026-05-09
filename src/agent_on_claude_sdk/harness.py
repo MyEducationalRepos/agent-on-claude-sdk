@@ -7,6 +7,7 @@ from typing import Any
 import anthropic
 
 from agent_on_claude_sdk.models import RunRecord, RunStatus, ToolResult, TraceEvent
+from agent_on_claude_sdk.persistence.fs_store import FsStore
 from agent_on_claude_sdk.tracing import Tracer
 import agent_on_claude_sdk.tools as tool_registry
 
@@ -23,6 +24,7 @@ def run(
     tracer: Tracer,
     record: RunRecord,
     *,
+    store: FsStore | None = None,
     client: anthropic.Anthropic | None = None,
 ) -> RunRecord:
     """Run the agent loop for *task* until done, max_turns, or error.
@@ -32,6 +34,7 @@ def run(
         settings: A ``Settings`` instance with model/max_turns/max_result_chars.
         tracer: A ``Tracer`` instance for the current run.
         record: A ``RunRecord`` (status=running) to update in place.
+        store: Optional ``FsStore`` — if given, persists the record at start and finish.
         client: Optional pre-built Anthropic client (for testing).
 
     Returns:
@@ -39,6 +42,9 @@ def run(
     """
     if client is None:
         client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
+
+    if store is not None:
+        store.save(record)
 
     messages: list[dict[str, Any]] = [{"role": "user", "content": task}]
     tracer.emit(TraceEvent(event_type="run_start", turn=0, content={"task": task}))
@@ -66,12 +72,16 @@ def run(
         if stop_reason in TERMINAL_STOP_REASONS:
             record.finish(RunStatus.complete)
             tracer.emit(TraceEvent(event_type="done", turn=turn, content={"status": "complete"}))
+            if store is not None:
+                store.save(record)
             return record
 
         if stop_reason != TOOL_USE_STOP_REASON:
             # Unrecognised stop reason — halt safely.
             record.finish(RunStatus.error, error_summary=f"unhandled stop_reason: {stop_reason}")
             tracer.emit(TraceEvent(event_type="done", turn=turn, content={"status": "error"}))
+            if store is not None:
+                store.save(record)
             return record
 
         # --- tool_use branch: dispatch all tool calls, collect results ---
@@ -124,4 +134,6 @@ def run(
     # Loop exhausted without a terminal stop reason.
     record.finish(RunStatus.max_turns)
     tracer.emit(TraceEvent(event_type="done", turn=settings.max_turns, content={"status": "max_turns"}))
+    if store is not None:
+        store.save(record)
     return record
