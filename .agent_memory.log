@@ -42,3 +42,4 @@
 2026-05-09 task=T-002 status=Success validator="test -d src/agent_on_claude_sdk && test -d tests/unit && test -d tests/integration && test -d tests/e2e && uv run python -c 'import agent_on_claude_sdk'" note="src layout and test package markers validated"
 2026-05-09 task=T-003 status=Success validator="rg ignore rules && rg env example && git check-ignore -v .env .pytest_cache tests/unit/__pycache__/test_project_metadata.cpython-314-pytest-9.0.3.pyc runs/example agent_on_claude_sdk.egg-info/PKG-INFO" note="ignore behavior and placeholder keys validated"
 2026-05-09 task=T-004 status=Success validator="rg README navigation && rg README quickstart" note="root entry point and run instructions validated"
+2026-05-09 task=T-005 status=Success validator="rg CLAUDE conventions headings && rg CLAUDE safety rules" note="root conventions confirmed at file top"
