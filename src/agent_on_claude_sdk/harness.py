@@ -48,10 +48,12 @@ def run(
 
     messages: list[dict[str, Any]] = [{"role": "user", "content": task}]
     tracer.emit(TraceEvent(event_type="run_start", turn=0, content={"task": task}))
+    print(f"[run] {record.run_id}  model={settings.model}  max_turns={settings.max_turns}")
 
     for turn in range(1, settings.max_turns + 1):
         record.turns_count = turn
         tracer.emit(TraceEvent(event_type="turn_start", turn=turn, content={}))
+        print(f"[turn {turn}/{settings.max_turns}] thinking…")
 
         response = client.messages.create(
             model=settings.model,
@@ -74,6 +76,7 @@ def run(
             tracer.emit(TraceEvent(event_type="done", turn=turn, content={"status": "complete"}))
             if store is not None:
                 store.save(record)
+            print(f"[done] status=complete  turns={record.turns_count}")
             return record
 
         if stop_reason != TOOL_USE_STOP_REASON:
@@ -82,6 +85,7 @@ def run(
             tracer.emit(TraceEvent(event_type="done", turn=turn, content={"status": "error"}))
             if store is not None:
                 store.save(record)
+            print(f"[done] status=error  reason={stop_reason}")
             return record
 
         # --- tool_use branch: dispatch all tool calls, collect results ---
@@ -98,6 +102,7 @@ def run(
                     content={"name": block.name, "input": block.input},
                 )
             )
+            print(f"  [tool] {block.name}")
             try:
                 raw = tool_registry.dispatch(block.name, block.input)
                 truncated = raw[: settings.max_result_chars]
@@ -136,4 +141,5 @@ def run(
     tracer.emit(TraceEvent(event_type="done", turn=settings.max_turns, content={"status": "max_turns"}))
     if store is not None:
         store.save(record)
+    print(f"[done] status=max_turns  turns={record.turns_count}")
     return record
