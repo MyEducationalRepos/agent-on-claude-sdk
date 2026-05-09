@@ -20,6 +20,29 @@ bash scripts/run.sh "Summarise the README"
 See [RUNBOOK.md](RUNBOOK.md) for full setup, Docker, testing, and troubleshooting
 instructions.
 
+## Inspecting Run Output
+
+Every run writes artifacts to `runs/<run-id>/`:
+
+```
+runs/7ea195e0-.../
+├── record.json   # task, model, status, timestamps
+└── trace.jsonl   # one JSON event per line
+```
+
+Inspect from the terminal:
+
+```sh
+# Latest run — summary of events
+jq '{event: .event_type, turn: .turn}' runs/$(ls -t runs/ | head -1)/trace.jsonl
+
+# Latest run — tool results only
+jq 'select(.event_type == "tool_result") | .content' runs/$(ls -t runs/ | head -1)/trace.jsonl
+
+# Full pretty-print (no jq required)
+cat runs/$(ls -t runs/ | head -1)/trace.jsonl | python -m json.tool
+```
+
 ## Project Map
 
 | File / Directory | Purpose |
