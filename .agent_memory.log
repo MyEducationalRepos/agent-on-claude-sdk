@@ -66,3 +66,4 @@ T-025 feat(console): add visible progress output — 6 passed
 T-026 feat(helpers): add research summary formatter — 12 passed
 T-027 feat(helpers): add related-links helper — 12 passed
 T-028 docs(links): add related-links artifact — validator passed
+T-029 docs(status): add phase 1b note — validator passed
