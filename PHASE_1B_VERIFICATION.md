@@ -4,7 +4,7 @@ Generated: 2026-05-09
 
 ## Summary
 
-Tasks T-001 through T-028 are committed and passing. The harness loop, CLI, persistence, tracing, tools, and helpers are all implemented and unit/integration tested.
+Tasks T-001 through T-037 are committed and passing. The harness loop, CLI, persistence, tracing, tools, helpers, Dockerfile, docker-compose, run scripts, secret guard, CI workflow, and integration/e2e tests are all implemented and validated. T-038 requires a live `ANTHROPIC_API_KEY` run to record evidence; `verify_behavior.sh` returns SKIP when keys are absent.
 
 ## Completed Items
 
@@ -43,20 +43,31 @@ Tasks T-001 through T-028 are committed and passing. The harness loop, CLI, pers
 
 | Task | Description | Status |
 |---|---|---|
-| T-030 | Dockerfile | Pending |
-| T-031 | docker-compose | Pending |
-| T-032 | scripts/run.sh | Pending |
-| T-033 | scripts/verify_behavior.sh | Pending |
-| T-034 | scripts/check_secrets.sh | Pending |
-| T-035 | .github/workflows/ci.yml | Pending |
-| T-036 | tests/integration/test_harness_loop.py | Pending |
-| T-037 | tests/e2e/test_real_run.py | Pending |
-| T-038 | Behavior validation evidence | Pending |
+| T-030 | Dockerfile | Complete |
+| T-031 | docker-compose | Complete |
+| T-032 | scripts/run.sh | Complete |
+| T-033 | scripts/verify_behavior.sh | Complete |
+| T-034 | scripts/check_secrets.sh | Complete |
+| T-035 | .github/workflows/ci.yml | Complete |
+| T-036 | tests/integration/test_harness_loop.py | Complete |
+| T-037 | tests/e2e/test_real_run.py | Complete |
+| T-038 | Behavior validation evidence | BLOCKED — needs live ANTHROPIC_API_KEY |
 | T-039 | Final hygiene + close MVP | Pending |
+
+## Behavior Validation Evidence
+
+| Field | Value |
+|---|---|
+| Script | scripts/verify_behavior.sh |
+| Result | SKIP (ANTHROPIC_API_KEY not set in this environment) |
+| Artifact | — |
+| Run ID | — |
+
+To record a live PASS: set `ANTHROPIC_API_KEY` and `TAVILY_API_KEY`, then run
+`bash scripts/verify_behavior.sh` and paste the `Run ID` and `Trace` lines here.
 
 ## Phase 1b status: BLOCKED
 
-Behavior validation (T-038) requires a live `ANTHROPIC_API_KEY` run plus
-`scripts/verify_behavior.sh` (T-033), which is not yet written.
-Docker and CI tasks (T-030 to T-035) also remain.
-Phase 1b will be declared **Complete** after T-039 closes.
+All structural tasks (T-001–T-037) are complete. T-038 is blocked on a live API
+key run. Phase 1b will be declared **Complete** after T-038 evidence is recorded
+and T-039 closes.
