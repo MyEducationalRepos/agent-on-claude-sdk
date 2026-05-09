@@ -61,3 +61,4 @@
 T-021 feat(harness): implement base loop — 18 passed
 T-022 feat(harness): aggregate tool results — 18 passed
 T-023 feat(harness): persist run state — 5 passed
+T-024 feat(cli): add main entrypoint — 7 passed
