@@ -76,3 +76,4 @@ T-035 ci(actions): add default workflow — YAML valid, required steps confirmed
 T-036 test(integration): add harness loop test — 6 passed
 T-037 test(e2e): add real run test — 1 skipped (no keys in CI)
 T-038 docs(status): record behavior evidence — BLOCKED (no live keys), verification note updated
+T-039 chore(release): close MVP verification — check_secrets PASS, gitignore confirmed, T-038 BLOCKED on live keys

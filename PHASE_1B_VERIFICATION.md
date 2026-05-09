@@ -52,7 +52,7 @@ Tasks T-001 through T-037 are committed and passing. The harness loop, CLI, pers
 | T-036 | tests/integration/test_harness_loop.py | Complete |
 | T-037 | tests/e2e/test_real_run.py | Complete |
 | T-038 | Behavior validation evidence | BLOCKED — needs live ANTHROPIC_API_KEY |
-| T-039 | Final hygiene + close MVP | Pending |
+| T-039 | Final hygiene + close MVP | Complete |
 
 ## Behavior Validation Evidence
 

@@ -10,10 +10,10 @@ cd "${REPO_ROOT}"
 FAIL=0
 
 # ── secret pattern scan (tracked + untracked non-ignored files) ───────────────
-# Excludes: tests/ (fake fixture keys), scripts/ (contains patterns as grep args)
+# Excludes: tests/ (fake fixture keys), scripts/ (grep args), .github/ (CI placeholders)
 echo "[check] scanning for secret patterns..."
 SECRET_HITS="$(git grep -rn -e 'sk-ant-' -e 'tvly-' \
-    -- ':!tests/' ':!scripts/' ':!*.md' 2>/dev/null || true)"
+    -- ':!tests/' ':!scripts/' ':!.github/' ':!*.md' 2>/dev/null || true)"
 
 if [[ -n "${SECRET_HITS}" ]]; then
     echo "FAIL: secret patterns found in tracked files:"
@@ -23,9 +23,9 @@ else
     echo "  OK: no secret patterns in tracked files"
 fi
 
-# Also scan untracked (non-ignored) files, excluding tests/ and scripts/
+# Also scan untracked (non-ignored) files, excluding tests/, scripts/, .github/
 UNTRACKED_SECRETS="$(git ls-files --others --exclude-standard \
-    | grep -v -e '^tests/' -e '^scripts/' \
+    | grep -v -e '^tests/' -e '^scripts/' -e '^\.github/' \
     | xargs grep -ln -e 'sk-ant-' -e 'tvly-' 2>/dev/null || true)"
 
 if [[ -n "${UNTRACKED_SECRETS}" ]]; then
