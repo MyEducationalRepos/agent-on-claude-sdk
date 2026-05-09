@@ -69,3 +69,4 @@ T-028 docs(links): add related-links artifact — validator passed
 T-029 docs(status): add phase 1b note — validator passed
 T-030 feat(docker): add Dockerfile — build+run passed, Python 3.12.13
 T-031 feat(docker): add compose stack — both configs passed
+T-032 feat(scripts): add standard run script — --help passed
