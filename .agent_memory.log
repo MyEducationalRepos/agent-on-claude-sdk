@@ -58,3 +58,5 @@
 2026-05-09T15:42:55Z task=T-018 status=success validator='rg patterns matched'
 2026-05-09T15:44:04Z task=T-019 status=success validator='7 passed'
 2026-05-09T15:45:17Z task=T-020 status=success validator='9 passed'
+T-021 feat(harness): implement base loop — 18 passed
+T-022 feat(harness): aggregate tool results — 18 passed
