@@ -73,3 +73,4 @@ T-032 feat(scripts): add standard run script — --help passed
 T-033 feat(scripts): add behavior verification — SKIP/PASS logic validated
 T-034 feat(scripts): add secret guard — PASS (excluded tests/ fixture keys)
 T-035 ci(actions): add default workflow — YAML valid, required steps confirmed
+T-036 test(integration): add harness loop test — 6 passed
